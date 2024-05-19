@@ -42,7 +42,6 @@ class Game:
         run = True
         while run:
 
-            #self.display.fill((14, 219, 248))
             self.display.blit(self.assets['background'], (0, 0))
 
             self.scroll[0] += (self.player.rect().centerx - self.display.get_width() / 2 - self.scroll[0]) / 30

@@ -1,7 +1,8 @@
 import os
 import pygame
 
-BASE_IMG_PATH = "data/images/"
+#BASE_IMG_PATH = "data/images/"
+BASE_IMG_PATH = "/Users/scottghome/PycharmProjects/ninja_blade/data/images/"
 
 
 def load_image(path):

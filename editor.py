@@ -22,6 +22,7 @@ class Editor:
             "grass": load_images("tiles/grass"),
             "large_decor": load_images("tiles/large_decor"),
             "stone": load_images("tiles/stone"),
+            "trees": load_images("tiles/trees"),
         }
 
         self.movement = [False, False, False, False]

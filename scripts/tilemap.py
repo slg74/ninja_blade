@@ -21,18 +21,6 @@ class Tilemap:
         self.tilemap = {}  # most tiles will be on this grid
         self.offgrid_tiles = []
 
-        for i in range(10):
-            self.tilemap[str(3 + i) + ";10"] = {
-                "type": "grass",
-                "variant": 1,
-                "pos": (3 + i, 10),
-            }
-            self.tilemap["10;" + str(5 + i)] = {
-                "type": "stone",
-                "variant": 1,
-                "pos": (10, 5 + i),
-            }
-
     def tiles_around(self, pos):
         tiles = []
         tile_loc = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
@@ -83,13 +71,3 @@ class Tilemap:
                 self.game.assets[tile["type"]][tile["variant"]],
                 (tile["pos"] - offset[0], tile["pos"][1] - offset[1]),
             )
-
-        # for loc in self.tilemap:
-        #    tile = self.tilemap[loc]
-        #    surf.blit(
-        #        self.game.assets[tile["type"]][tile["variant"]],
-        #        (
-        #            tile["pos"][0] * self.tile_size - offset[0],
-        #            tile["pos"][1] * self.tile_size - offset[1],
-        #        ),
-        #    )

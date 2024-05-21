@@ -37,6 +37,7 @@ class Editor:
         self.clicking = False
         self.right_clicking = False
         self.shift = False
+        self.ongrid = True
 
     def run(self):
         run = True
@@ -66,13 +67,16 @@ class Editor:
                 int((mpos[1] + self.scroll[1]) // self.tilemap.tile_size),
             )
 
-            self.display.blit(
-                current_tile_img,
-                (
-                    tile_pos[0] * self.tilemap.tile_size - self.scroll[0],
-                    tile_pos[1] * self.tilemap.tile_size - self.scroll[1],
+            if self.ongrid:
+                self.display.blit(
+                    current_tile_img,
+                    (
+                        tile_pos[0] * self.tilemap.tile_size - self.scroll[0],
+                        tile_pos[1] * self.tilemap.tile_size - self.scroll[1],
+                    )
                 )
-            )
+            else:
+                self.display.blit(current_tile_img, mpos)
 
             if self.clicking:
                 self.tilemap.tilemap[str(tile_pos[0]) + ";" + str(tile_pos[1])] = {
@@ -100,6 +104,17 @@ class Editor:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         self.clicking = True
+                        if not self.ongrid:
+                            self.tilemap.offgrid_tiles.append(
+                                {
+                                    "type": self.tile_list[self.tile_group],
+                                    "variant": self.tile_variant,
+                                    "pos": (
+                                        mpos[0] + self.scroll[0],
+                                        mpos[1] + self.scroll[1],
+                                    ),
+                                }
+                            )
                     if event.button == 3:
                         self.right_clicking = True
                     if self.shift:
@@ -116,12 +131,13 @@ class Editor:
                             self.tile_group = (self.tile_group - 1) % len(
                                 self.tile_list
                             )
-                            self.title_variant = 0
+                            self.tile_variant = 0
                         if event.button == 5:
                             self.tile_group = (self.tile_group + 1) % len(
                                 self.tile_list
                             )
-                            self.title_variant = 0
+                            self.tile_variant = 0
+
 
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
@@ -138,7 +154,9 @@ class Editor:
                         self.movement[2] = True
                     if event.key == pygame.K_s:
                         self.movement[3] = True
-                    if event.key == pygame.K_LSHIFT:
+                    if event.key == pygame.K_g:
+                        self.ongrid = not self.ongrid
+                    if event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT:
                         self.shift = True
 
                 if event.type == pygame.KEYUP:
@@ -150,7 +168,7 @@ class Editor:
                         self.movement[2] = False
                     if event.key == pygame.K_s:
                         self.movement[3] = False
-                    if event.key == pygame.K_LSHIFT:
+                    if event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT:
                         self.shift = False
 
             self.screen.blit(

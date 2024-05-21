@@ -28,6 +28,11 @@ class Editor:
 
         self.tilemap = Tilemap(self, tile_size=16)
 
+        try:
+            self.tilemap.load("map.json")
+        except FileNotFoundError:
+            self.tilemap.save("map.json")
+
         self.scroll = [0, 0]
 
         self.tile_list = list(self.assets)
@@ -89,6 +94,15 @@ class Editor:
                 tile_loc = str(tile_pos[0]) + ";" + str(tile_pos[1])
                 if tile_loc in self.tilemap.tilemap:
                     del self.tilemap.tilemap[tile_loc]
+
+                for tile in self.tilemap.offgrid_tiles.copy():
+                    tile_img = self.assets[tile["type"]][tile["variant"]]
+                    tile_r = pygame.Rect(tile["pos"][0] - self.scroll[0], tile['pos'][1] - self.scroll[1],
+                                         tile_img.get_width(), tile_img.get_height())
+
+                    if tile_r.collidepoint(mpos):
+                        self.tilemap.offgrid_tiles.remove(tile)
+
 
             self.display.blit(current_tile_img, (5, 5))
 
@@ -156,7 +170,9 @@ class Editor:
                         self.movement[3] = True
                     if event.key == pygame.K_g:
                         self.ongrid = not self.ongrid
-                    if event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT:
+                    if event.key == pygame.K_o:
+                        self.tilemap.save("map.json")
+                    if event.key == pygame.K_LSHIFT:
                         self.shift = True
 
                 if event.type == pygame.KEYUP:
@@ -168,7 +184,7 @@ class Editor:
                         self.movement[2] = False
                     if event.key == pygame.K_s:
                         self.movement[3] = False
-                    if event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT:
+                    if event.key == pygame.K_LSHIFT:
                         self.shift = False
 
             self.screen.blit(

@@ -35,6 +35,9 @@ class Tilemap:
         self.tilemap = {}  # most tiles will be on this grid
         self.offgrid_tiles = []
 
+    def extract(self, id_pairs, keep=False):
+        
+
     def tiles_around(self, pos):
         tiles = []
         tile_loc = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))

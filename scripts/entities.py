@@ -8,7 +8,7 @@ class PhysicsEntity:
         self.pos = list(pos)
         self.size = size
         self.velocity = [0, 0]
-        self.collisions = {"up": False, "down": False, "left": False, "right": False}
+        self.collisions = {"up": False, "down": False, "right": False, "left": False}
 
         self.action = ""
         self.anim_offset = (-3, -3)
@@ -24,13 +24,13 @@ class PhysicsEntity:
             self.animation = self.game.assets[self.type + "/" + self.action].copy()
 
     def update(self, tilemap, movement=(0, 0)):
+        self.collisions = {"up": False, "down": False, "right": False, "left": False}
+
         frame_movement = (
             movement[0] + self.velocity[0],
             movement[1] + self.velocity[1],
         )
-        self.collisions = {"up": False, "down": False, "left": False, "right": False}
 
-        # x-axis movement
         self.pos[0] += frame_movement[0]
         entity_rect = self.rect()
         for rect in tilemap.physics_rects_around(self.pos):
@@ -43,8 +43,7 @@ class PhysicsEntity:
                     self.collisions["left"] = True
                 self.pos[0] = entity_rect.x
 
-        # y-axis movement
-        self.pos[1] += frame_movement[1]  # y pos movement
+        self.pos[1] += frame_movement[1]
         entity_rect = self.rect()
         for rect in tilemap.physics_rects_around(self.pos):
             if entity_rect.colliderect(rect):
@@ -53,7 +52,7 @@ class PhysicsEntity:
                     self.collisions["down"] = True
                 if frame_movement[1] < 0:
                     entity_rect.top = rect.bottom
-                self.collisions["up"] = True
+                    self.collisions["up"] = True
                 self.pos[1] = entity_rect.y
 
         if movement[0] > 0:

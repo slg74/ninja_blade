@@ -121,7 +121,6 @@ class Player(PhysicsEntity):
             else:
                 self.set_action("idle")
 
-
         # burst particles
         if abs(self.dashing) in {60, 50}:
             for i in range(20):
